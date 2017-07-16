@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<link rel="stylesheet" type="text/css" href="../themes/default/easyui.css">   
+<link rel="stylesheet" type="text/css" href="../themes/icon.css">   
+<script type="text/javascript" src="../jquery.min.js"></script>  
+<script type="text/javascript" src="../jquery.easyui.min.js"></script> 
+</head>
+
+<body>
+
+
+
+
+<div id="p" class="easyui-panel" style="width:500px;height:200px;padding:10px;"   
+        title="My Panel" data-options="iconCls:'icon-save',collapsible:true">   
+    The panel content    
+</div>  
+
+
+
+
+<div id="diva" 
+data-options="title:'zhanghao',iconCls:'icon-save',collapsible:true,minimizable:true,maximizable:true" 
+class="easyui-panel"   
+style="width:500px;height:150px; padding:10px;background:#fafafa;">
+</div>
+<script type="text/javascript" language="javascript">
+$('#diva').draggable();//最简单的panel移动方式
+</script>
+<a href="#" onclick="javascript:$('#diva').panel('open')">Open</a>
+
+<div id="divb" class="easyui-panel">
+  <p>hello worldhello worldhello worldhello world</p>
+  <p>hello worldhello worldhello worldhello world</p>
+</div>
+<script  language="javascript" type="text/javascript">
+   $('#divb').draggable();
+   $('#divb').panel({
+      width:600,
+	  height:200,
+	  href:'panel01.html',
+	 //href:'panel01.html',    
+    //  onLoad:function(){    
+    //        alert('loaded successfully');    
+    //  } 
+	  loadingMessage:'哥正在努力加载......'   
+   });
+</script>
+
+<input class="easyui-combobox" name="language"   
+        data-options="    
+            url:'http://localhost/mvc01/Home/rtnJson',    
+            valueField:'id',    
+            textField:'text',    
+            panelHeight:'auto',    
+            onSelect:function(record){    
+                alert(record.text)    
+            }" />
+</body>
+</html>

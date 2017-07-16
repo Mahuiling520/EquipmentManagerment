@@ -1,0 +1,236 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+<style>
+        body {
+            font-family: Microsoft YaHei,Verdana,Arial,SimSun;
+            color: #666;
+            font-size: 14px;
+            background: #f6f6f6;
+            overflow: hidden;
+            margin-left: 20px;
+        }
+    </style>
+    <script src="~/jquery-easyui-1.3.6/jquery.min.js"></script>
+    <script src="~/jquery-easyui-1.3.6/jquery.easyui.min.js"></script>
+    <link href="~/jquery-easyui-1.3.6/themes/icon.css" rel="stylesheet" />
+    <link href="~/jquery-easyui-1.3.6/themes/default/easyui.css" rel="stylesheet" />
+    <script type="text/javascript">
+        //编辑
+        function Edit() {
+            //var URL;
+            $("#btnEdit").click(function () {
+                var row = $("#tb").datagrid('getSelected');
+                if (row) {
+                    console.info(row);
+                    $('#Dialog').dialog('open').dialog('setTitle', '维修处理');
+                    $("#ff").form('load', row);
+                    $("#Img").attr("src", "/images/" + row.Img);
+                    URL = "/Service/Update/?SID=" + row.SID;
+                    //修改数据
+                    $("#btnOK").click(function () {
+                        $("#ff").form('submit', {
+                            url: URL,
+                            success: function (result) {
+                                var result = eval('(' + result + ')');
+                                if (result.success) {
+                                    $.messager.alert('提示', '修改成功');
+                                    $("#Dialog").dialog('close');
+                                    $("#tb").datagrid('reload');
+                                    $("#ff").form('clear');
+                                } else {
+                                    $.message.show({ title: Error, msg: result.msg });
+                                }
+                            }
+                        });
+                    });
+                } else {
+                    $.messager.defaults = { ok: "确定", cancel: "取消" };
+                    $.messager.alert('提示', '请选择编辑的数据行！');
+                }
+            });
+        }
+        //绑定下拉框
+        $(function () {
+
+            $('#TypeName').combobox({
+                method: 'post',
+                url: '/Service/selType',
+                valueField: 'ETypeID',
+                textField: 'EType1',
+            });
+            Edit();
+            //时间格式
+            Date.prototype.format = function (format) {
+                var o = {
+                    "M+": this.getMonth() + 1,//月份
+                    "d+": this.getDate(),//日期
+                    "h+": this.getHours(),//小时
+                    "m+": this.getMinutes()//分钟
+                }
+                if (/(y+)/.test(format)) {
+                    format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                }
+                for (var k in o) {
+                    if (new RegExp("(" + k + ")").test(format))
+                        format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+                }
+                return format;
+            }
+            function DateTimeFormatter(value) {
+                if (value == undefined) {
+                    return "";
+                }
+                //将json转换为js时间格式
+                value = value.substr(1, value.length - 2);
+                var obj = eval('(' + "{Date: new " + value + "}" + ')');
+                var dateVlaue = obj["Date"];
+                if (dateVlaue.getFullYear() < 1900) {
+                    return "";
+                }
+                return dateVlaue.format("yyyy-MM-dd");
+            }
+            //显示列表
+            $('#tb').datagrid({
+                url: '/Service/GetList',
+                method: 'post',
+                fitColumns: true,
+                singleSelect: true,
+                rownumbers: true,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                pagination: true,
+                columns: [[
+                { field: 'ck', checkbox: true },
+                { field: 'SID', title: '编号', align: 'center', width: 100 },
+                { field: 'EName', title: '设备名称', align: 'center', width: 100 },
+                { field: 'EType', title: '设备类型', align: 'center', width: 100 },
+                { field: 'SAddress', title: '送修处', align: 'center', width: 100 },
+                { field: 'SPMan', title: '维修人员', align: 'center', width: 100 },
+                { field: 'SCauseDate', title: '送修日期', align: 'center', width: 100, formatter: DateTimeFormatter },
+                {
+                    field: 'SCause', title: '故障原因', align: 'center', width: 100
+                }
+                      //{
+                      //    field: '#', title: '操作', width: 100,
+                      //    formatter: function (value, row, index) {
+                      //        var str = "<a href='#' onclick='Del(" + row.SID + ")'><img src='/jquery-easyui-1.3.6/themes/icons/edit_remove.png' /><a>";
+                      //        return str;
+                      //    }
+                      //}
+                ]],
+                toolbar: '#bt',
+            });
+            //刷新
+            $("#btnReload").click(function () {
+                $("#tb").datagrid("reload");
+            });
+            //模糊查询
+            $('#btnsearch').click(function () {
+                $('#tb').datagrid('load', {
+                    EQName: $('#EQName').val(),
+                    TypeName: $('#TypeName').combobox('getText'),
+                    STDate: $('#STDate').datebox('getValue'),
+                });
+            });
+        });
+        //删除
+        function Del(SID) {
+            $.messager.confirm('提示', '确定要删除吗？', function (r) {
+                if (r) {
+                    $.ajax({
+                        url: '/Service/Delete',
+                        data: { "SID": SID },
+                        success: function (result) {
+                            if (result == "success") {
+                                $.messager.alert('提示', '删除成功');
+                                $("#tb").datagrid('reload');
+                                $("#tb").datagrid('clearSelections');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h2 style="text-align: center">查询设备维修</h2>
+    <p>
+        设备名称：<input class="easyui-textbox" id="EQName" name="EQName" />
+        设备类别：
+        <input id="TypeName" name="TypeName" />
+        开始时间：<input class="easyui-datebox" id="STDate" name="STDate" />
+        <input type="button" value="查询" id="btnsearch" />
+        @Html.ActionLink("返回首页", "Index")
+    </p>
+    <div>
+        <table id="tb"></table>
+    </div>
+    <div id="bt">
+        <div style="margin-bottom: 5px;">
+            <a href="#" class="easyui-linkbutton" iconcls="icon-edit" plain="true" id="btnEdit">编辑</a>
+            <a href="#" class="easyui-linkbutton" iconcls="icon-reload" plain="true" id="btnReload">刷新</a>
+        </div>
+    </div>
+    @*//对话框*@
+    <div id="Dialog" class="easyui-dialog" style="width: 700px; height: 400px; padding: 10px 10px;" closed="true" resizable="true" modal="true" buttons="#btn" align="center">
+        <form id="ff" method="post">
+            <table>
+                <tr>
+                    <td>设备名称：</td>
+                    <td>
+                        <input id="EName" class="easyui-textbox" name="EName"></td>
+                    <td>设备类型：</td>
+                    <td>
+                        <input id="EType" class="easyui-textbox" name="EType"></td>
+                    <td>
+                        <img id="Img" alt="" src="" style="width: 80px; height: 80px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>维修地点：</td>
+                    <td>
+                        <input class="easyui-textbox" name="SAddress" /></td>
+                    <td>维修人员：</td>
+                    <td>
+                        <input class="easyui-textbox" name="SPMan" /></td>
+                </tr>
+                <tr>
+                    <td>故障原因：</td>
+                    <td>
+                        <input class="easyui-textbox" name="SCause" /></td>
+                    <td>维修日期：</td>
+                    <td>
+                        <input type="text" class="easyui-datebox" required="required" editable="false" name="SCauseDate" /></td>
+                </tr>
+                <tr>
+                    <td>维修费用：</td>
+                    <td>
+                        <input class="easyui-textbox" name="SCost" />元</td>
+                    <td>维修费时：</td>
+                    <td>
+                        <input type="text" class="easyui-textbox" required="required" editable="false" name="SHour" />工时</td>
+                </tr>
+                <tr>
+                    <td>备注：</td>
+                    <td colspan="3">
+                        <textarea style="width: 200px; height: 70px" name="SDesc"></textarea>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div id="btn">
+        <a href="javascript:void(0)" class="easyui-linkbutton" id="btnOK" iconcls="icon-ok">确定</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#Dialog').dialog('close')">关闭</a>
+    </div>
+</body>
+</html>

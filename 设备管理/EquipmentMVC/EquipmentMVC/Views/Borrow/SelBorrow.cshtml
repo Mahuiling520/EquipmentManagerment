@@ -1,0 +1,150 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/jquery-easyui-1.3.6/themes/default/easyui.css" rel="stylesheet" />
+    <link href="~/jquery-easyui-1.3.6/themes/icon.css" rel="stylesheet" />
+    <script src="~/jquery-easyui-1.3.6/jquery.min.js"></script>
+    <script src="~/jquery-easyui-1.3.6/jquery.easyui.min.js"></script>
+    <script src="~/jquery-easyui-1.3.6/locale/easyui-lang-zh_CN.js"></script>
+    <style>
+        body {
+            font-family: Microsoft YaHei,Verdana,Arial,SimSun;
+            color: #666;
+            font-size: 14px;
+            background: #f6f6f6;
+            overflow: hidden;
+            margin-left: 20px;
+        }
+
+        p {
+            margin-left: 100px;
+            /*line-height: 30px;*/
+        }
+
+        input {
+            width: 50px;
+        }
+
+        #BDate, #EndDate {
+            width: 90px;
+        }
+
+        #EType {
+            width: 65px;
+        }
+    </style>
+    <script>
+        var id;
+        Date.prototype.format = function (format) {
+            var o = {
+                "M+": this.getMonth() + 1,//月份
+                "d+": this.getDate(),//日期
+                "h+": this.getHours(),//小时
+                "m+": this.getMinutes()//分钟
+            }
+            if (/(y+)/.test(format)) {
+                format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            }
+            for (var k in o) {
+                if (new RegExp("(" + k + ")").test(format))
+                    format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+            }
+            return format;
+        }
+        function DateTimeFormatter(value) {
+            if (value == undefined) {
+                return "";
+            }
+            //将json转换为js时间格式
+            value = value.substr(1, value.length - 2);
+            var obj = eval('(' + "{Date: new " + value + "}" + ')');
+            var dateVlaue = obj["Date"];
+            if (dateVlaue.getFullYear() < 1900) {
+                return "";
+            }
+            return dateVlaue.format("yyyy-MM-dd");
+        }
+        $(function () {
+
+            $('#BDate').datebox({
+                required: true
+            });
+            //$('#RDate').datebox({
+            //    required: true
+            //});
+            $('#dg').datagrid({
+                url: '/Borrow/GetList',
+                fitColumns: true,
+                rownumbers: true,
+                columns: [[
+                    { field: 'EName', title: '设备名称', width: 100, align: 'center' },
+                    { field: 'EType', title: '设备类型', width: 100, align: 'center' },
+                    { field: 'BrandName', title: '借出部门', width: 100, align: 'center' },
+                    { field: 'BPMan', title: '借出人', width: 100, align: 'center' },
+                    {
+                        field: 'BDate', title: '借出时间', width: 100, align: 'center', formatter: DateTimeFormatter
+                    },
+                    { field: 'BHour', title: '借出天数', width: 100, align: 'center' },
+                    {
+                        field: 'operate', title: '操作', width: 100, align: 'center', formatter: function (value, row, index) {
+                            var str = '<a href="" id="xg"  name="opera">归还</a>'; return str
+                        }
+                    }
+                ]],
+                onSelect: function (rowIndex, rowData) {
+                    id = rowData.BID;
+                    console.info(id);
+                    $("a").attr('href', '/Borrow/Return?BID=' + id);
+                }
+            });
+            $('#EType').combobox({
+                url: '/Borrow/DropList1',
+                valueField: 'ETypeID',
+                textField: 'EType1',
+                panelHeight: 'auto',
+                onLoadSuccess: function (data) {
+                    $('#EType').combobox('setValue', data[0].ETypeID)
+                }
+            });
+            $("#btn").click(function () {
+                var type = $("#EType").combobox('getText');
+                var time = $("#BDate").datebox('getValue');
+                //var time2 = $("#RDate").datebox('getValue');
+                // alert(time2);
+                $("#dg").datagrid('load', {
+                    'name': $("#EName").val(),
+                    'type': type,
+                    'BDate': time
+                    //'RDate': time2
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="main">
+        <h1 style="text-align: center">设备归还信息</h1>
+        <div style="width: 800px; margin: 0 auto; height: 400px;">
+            <form id="frm">
+                <p style="margin-top: 50px;">
+                    设备名称: @Html.TextBox("EName") 设备类型: @Html.TextBox("EType") 开始日期: @Html.TextBox("BDate") @*结束日期: @Html.TextBox("RDate")*@
+                    <input type="button" id="btn" name="btn" value="查 询" />
+                </p>
+            </form>
+            <br />
+            <br />
+            <br />
+            <div id="dg">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

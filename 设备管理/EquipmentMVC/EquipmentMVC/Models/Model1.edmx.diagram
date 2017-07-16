@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="2efa9381e7a6424a80b43f149371532b" Name="关系图1">
+        <EntityTypeShape EntityType="EquipmentDBModel.BorrowAndReturn" Width="1.5" PointX="8.25" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquipmentDBModel.Brand" Width="1.5" PointX="6" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquipmentDBModel.Equipment" Width="1.5" PointX="3" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquipmentDBModel.EType" Width="1.5" PointX="0.75" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquipmentDBModel.Reject" Width="1.5" PointX="5.25" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquipmentDBModel.Service" Width="1.5" PointX="5.25" PointY="10.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquipmentDBModel.State" Width="1.5" PointX="6" PointY="14.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquipmentDBModel.Users" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="EquipmentDBModel.FK_BorrowAndReturn_Brand" ManuallyRouted="false" />
+        <AssociationConnector Association="EquipmentDBModel.FK_BorrowAndReturn_Equipment" ManuallyRouted="false" />
+        <AssociationConnector Association="EquipmentDBModel.FK_BorrowAndReturn_EType" ManuallyRouted="false" />
+        <AssociationConnector Association="EquipmentDBModel.FK_BorrowAndReturn_State" ManuallyRouted="false" />
+        <AssociationConnector Association="EquipmentDBModel.FK_Equipment_EType" ManuallyRouted="false" />
+        <AssociationConnector Association="EquipmentDBModel.FK_Reject_Equipment" ManuallyRouted="false" />
+        <AssociationConnector Association="EquipmentDBModel.FK_Service_Equipment" ManuallyRouted="false" />
+        <AssociationConnector Association="EquipmentDBModel.FK_EType_EType" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

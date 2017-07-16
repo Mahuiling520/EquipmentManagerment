@@ -1,0 +1,241 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="EquipmentDBModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="EquipmentDBEntities" p1:LazyLoadingEnabled="true">
+    <EntitySet Name="BorrowAndReturn" EntityType="EquipmentDBModel.BorrowAndReturn" />
+    <EntitySet Name="Brand" EntityType="EquipmentDBModel.Brand" />
+    <EntitySet Name="Equipment" EntityType="EquipmentDBModel.Equipment" />
+    <EntitySet Name="EType" EntityType="EquipmentDBModel.EType" />
+    <EntitySet Name="Reject" EntityType="EquipmentDBModel.Reject" />
+    <EntitySet Name="Service" EntityType="EquipmentDBModel.Service" />
+    <EntitySet Name="State" EntityType="EquipmentDBModel.State" />
+    <EntitySet Name="Users" EntityType="EquipmentDBModel.Users" />
+    <AssociationSet Name="FK_BorrowAndReturn_Brand" Association="EquipmentDBModel.FK_BorrowAndReturn_Brand">
+      <End Role="Brand" EntitySet="Brand" />
+      <End Role="BorrowAndReturn" EntitySet="BorrowAndReturn" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BorrowAndReturn_Equipment" Association="EquipmentDBModel.FK_BorrowAndReturn_Equipment">
+      <End Role="Equipment" EntitySet="Equipment" />
+      <End Role="BorrowAndReturn" EntitySet="BorrowAndReturn" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BorrowAndReturn_EType" Association="EquipmentDBModel.FK_BorrowAndReturn_EType">
+      <End Role="EType" EntitySet="EType" />
+      <End Role="BorrowAndReturn" EntitySet="BorrowAndReturn" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BorrowAndReturn_State" Association="EquipmentDBModel.FK_BorrowAndReturn_State">
+      <End Role="State" EntitySet="State" />
+      <End Role="BorrowAndReturn" EntitySet="BorrowAndReturn" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Equipment_EType" Association="EquipmentDBModel.FK_Equipment_EType">
+      <End Role="EType" EntitySet="EType" />
+      <End Role="Equipment" EntitySet="Equipment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Reject_Equipment" Association="EquipmentDBModel.FK_Reject_Equipment">
+      <End Role="Equipment" EntitySet="Equipment" />
+      <End Role="Reject" EntitySet="Reject" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Service_Equipment" Association="EquipmentDBModel.FK_Service_Equipment">
+      <End Role="Equipment" EntitySet="Equipment" />
+      <End Role="Service" EntitySet="Service" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EType_EType" Association="EquipmentDBModel.FK_EType_EType">
+      <End Role="EType" EntitySet="EType" />
+      <End Role="EType1" EntitySet="EType" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="BorrowAndReturn">
+    <Key>
+      <PropertyRef Name="BID" />
+    </Key>
+    <Property Name="BID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="EID" Type="Int32" />
+    <Property Name="BPMan" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="BBrandID" Type="Int32" />
+    <Property Name="BHour" Type="Int32" />
+    <Property Name="BDate" Type="DateTime" Precision="0" />
+    <Property Name="RDate" Type="DateTime" Precision="0" />
+    <Property Name="EStateID" Type="Int32" Nullable="false" />
+    <Property Name="EType" Type="Int32" />
+    <NavigationProperty Name="Brand" Relationship="EquipmentDBModel.FK_BorrowAndReturn_Brand" FromRole="BorrowAndReturn" ToRole="Brand" />
+    <NavigationProperty Name="Equipment" Relationship="EquipmentDBModel.FK_BorrowAndReturn_Equipment" FromRole="BorrowAndReturn" ToRole="Equipment" />
+    <NavigationProperty Name="EType1" Relationship="EquipmentDBModel.FK_BorrowAndReturn_EType" FromRole="BorrowAndReturn" ToRole="EType" />
+    <NavigationProperty Name="State" Relationship="EquipmentDBModel.FK_BorrowAndReturn_State" FromRole="BorrowAndReturn" ToRole="State" />
+  </EntityType>
+  <EntityType Name="Brand">
+    <Key>
+      <PropertyRef Name="BID" />
+    </Key>
+    <Property Name="BID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="BrandName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="BorrowAndReturn" Relationship="EquipmentDBModel.FK_BorrowAndReturn_Brand" FromRole="Brand" ToRole="BorrowAndReturn" />
+  </EntityType>
+  <EntityType Name="Equipment">
+    <Key>
+      <PropertyRef Name="EID" />
+    </Key>
+    <Property Name="EID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="EName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="ETypeID" Type="Int32" />
+    <Property Name="EModel" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="EBrand" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="ENum" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="EFactory" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="EMFD" Type="DateTime" Precision="0" />
+    <Property Name="EBD" Type="DateTime" Precision="0" />
+    <Property Name="EPic" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="EDesc" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="EState" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="BorrowAndReturn" Relationship="EquipmentDBModel.FK_BorrowAndReturn_Equipment" FromRole="Equipment" ToRole="BorrowAndReturn" />
+    <NavigationProperty Name="EType" Relationship="EquipmentDBModel.FK_Equipment_EType" FromRole="Equipment" ToRole="EType" />
+    <NavigationProperty Name="Reject" Relationship="EquipmentDBModel.FK_Reject_Equipment" FromRole="Equipment" ToRole="Reject" />
+    <NavigationProperty Name="Service" Relationship="EquipmentDBModel.FK_Service_Equipment" FromRole="Equipment" ToRole="Service" />
+  </EntityType>
+  <EntityType Name="EType">
+    <Key>
+      <PropertyRef Name="ETypeID" />
+    </Key>
+    <Property Name="ETypeID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="EType1" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="BorrowAndReturn" Relationship="EquipmentDBModel.FK_BorrowAndReturn_EType" FromRole="EType" ToRole="BorrowAndReturn" />
+    <NavigationProperty Name="Equipment" Relationship="EquipmentDBModel.FK_Equipment_EType" FromRole="EType" ToRole="Equipment" />
+    <NavigationProperty Name="EType11" Relationship="EquipmentDBModel.FK_EType_EType" FromRole="EType" ToRole="EType1" />
+    <NavigationProperty Name="EType2" Relationship="EquipmentDBModel.FK_EType_EType" FromRole="EType1" ToRole="EType" />
+  </EntityType>
+  <EntityType Name="Reject">
+    <Key>
+      <PropertyRef Name="RID" />
+    </Key>
+    <Property Name="RID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="EID" Type="Int32" Nullable="false" />
+    <Property Name="RCost" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="RDate" Type="DateTime" Precision="0" />
+    <Property Name="RCause" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Equipment" Relationship="EquipmentDBModel.FK_Reject_Equipment" FromRole="Reject" ToRole="Equipment" />
+  </EntityType>
+  <EntityType Name="Service">
+    <Key>
+      <PropertyRef Name="SID" />
+    </Key>
+    <Property Name="SID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="EID" Type="Int32" Nullable="false" />
+    <Property Name="SPMan" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="SAddress" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="SCause" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="SCauseDate" Type="DateTime" Precision="0" />
+    <Property Name="SDesc" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="SCost" Type="String" MaxLength="10" Unicode="true" FixedLength="true" />
+    <Property Name="SHour" Type="Decimal" Precision="4" Scale="1" />
+    <NavigationProperty Name="Equipment" Relationship="EquipmentDBModel.FK_Service_Equipment" FromRole="Service" ToRole="Equipment" />
+  </EntityType>
+  <EntityType Name="State">
+    <Key>
+      <PropertyRef Name="SID" />
+    </Key>
+    <Property Name="SID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="SName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="BorrowAndReturn" Relationship="EquipmentDBModel.FK_BorrowAndReturn_State" FromRole="State" ToRole="BorrowAndReturn" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="UID" />
+    </Key>
+    <Property Name="UID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="UName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="UPwd" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK_BorrowAndReturn_Brand">
+    <End Role="Brand" Type="EquipmentDBModel.Brand" Multiplicity="0..1" />
+    <End Role="BorrowAndReturn" Type="EquipmentDBModel.BorrowAndReturn" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Brand">
+        <PropertyRef Name="BID" />
+      </Principal>
+      <Dependent Role="BorrowAndReturn">
+        <PropertyRef Name="BBrandID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BorrowAndReturn_Equipment">
+    <End Role="Equipment" Type="EquipmentDBModel.Equipment" Multiplicity="0..1" />
+    <End Role="BorrowAndReturn" Type="EquipmentDBModel.BorrowAndReturn" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Equipment">
+        <PropertyRef Name="EID" />
+      </Principal>
+      <Dependent Role="BorrowAndReturn">
+        <PropertyRef Name="EID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BorrowAndReturn_EType">
+    <End Role="EType" Type="EquipmentDBModel.EType" Multiplicity="0..1" />
+    <End Role="BorrowAndReturn" Type="EquipmentDBModel.BorrowAndReturn" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EType">
+        <PropertyRef Name="ETypeID" />
+      </Principal>
+      <Dependent Role="BorrowAndReturn">
+        <PropertyRef Name="EType" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BorrowAndReturn_State">
+    <End Role="State" Type="EquipmentDBModel.State" Multiplicity="1" />
+    <End Role="BorrowAndReturn" Type="EquipmentDBModel.BorrowAndReturn" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="State">
+        <PropertyRef Name="SID" />
+      </Principal>
+      <Dependent Role="BorrowAndReturn">
+        <PropertyRef Name="EStateID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Equipment_EType">
+    <End Role="EType" Type="EquipmentDBModel.EType" Multiplicity="0..1" />
+    <End Role="Equipment" Type="EquipmentDBModel.Equipment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EType">
+        <PropertyRef Name="ETypeID" />
+      </Principal>
+      <Dependent Role="Equipment">
+        <PropertyRef Name="ETypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Reject_Equipment">
+    <End Role="Equipment" Type="EquipmentDBModel.Equipment" Multiplicity="1" />
+    <End Role="Reject" Type="EquipmentDBModel.Reject" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Equipment">
+        <PropertyRef Name="EID" />
+      </Principal>
+      <Dependent Role="Reject">
+        <PropertyRef Name="EID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Service_Equipment">
+    <End Role="Equipment" Type="EquipmentDBModel.Equipment" Multiplicity="1" />
+    <End Role="Service" Type="EquipmentDBModel.Service" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Equipment">
+        <PropertyRef Name="EID" />
+      </Principal>
+      <Dependent Role="Service">
+        <PropertyRef Name="EID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EType_EType">
+    <End Role="EType" Type="EquipmentDBModel.EType" Multiplicity="1" />
+    <End Role="EType1" Type="EquipmentDBModel.EType" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="EType">
+        <PropertyRef Name="ETypeID" />
+      </Principal>
+      <Dependent Role="EType1">
+        <PropertyRef Name="ETypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

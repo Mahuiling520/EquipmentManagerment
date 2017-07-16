@@ -1,0 +1,429 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/jquery-easyui-1.3.6/themes/default/easyui.css" rel="stylesheet" />
+    <link href="~/jquery-easyui-1.3.6/themes/icon.css" rel="stylesheet" />
+    <script src="~/jquery-easyui-1.3.6/jquery.min.js"></script>
+    <script src="~/jquery-easyui-1.3.6/jquery.easyui.min.js"></script>
+    <script src="~/jquery-easyui-1.3.6/locale/easyui-lang-zh_CN.js"></script>
+    <style>
+        body {
+            font-family: Microsoft YaHei,Verdana,Arial,SimSun;
+            color: #666;
+            font-size: 14px;
+            background: #f6f6f6;
+            overflow: hidden;
+            margin-left: 20px;
+        }
+
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+
+        #Contain {
+            width: 100%;
+            /*border:1px solid #808080;*/
+        }
+
+        #MainCon {
+            width: 800px;
+            /*border:1px solid #808080;*/
+            margin: 0px auto;
+            padding: 20px 20px;
+            text-align: center;
+        }
+
+        #InfoWhere {
+            margin-top: 30px;
+        }
+
+        #Show {
+            margin-top: 30px;
+        }
+
+
+        #btn {
+            float: right;
+            margin-top: 20px;
+        }
+
+        table .title {
+            text-align: right;
+        }
+
+        #dlg table tr {
+            height: 50px;
+            line-height: 50px;
+        }
+
+        #tblAdd1 {
+            /*height:400px;*/
+            float: left;
+        }
+
+        #dlg p {
+            width: 200px;
+            margin-top: 10px;
+            margin-left: 40px;
+        }
+
+        #dg {
+            margin-top: 30px;
+        }
+    </style>
+    <script type="text/javascript">
+        //Date.prototype.format = function (format) {
+        //    var o = {
+        //        "M+": this.getMonth() + 1,//月份
+        //        "d+": this.getDate(),//日期
+        //        "h+": this.getHours(),//小时
+        //        "m+": this.getMinutes()//分钟
+        //    }
+        //    if (/(y+)/.test(format)) {
+        //        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        //    }
+        //    for (var k in o) {
+        //        if (new RegExp("(" + k + ")").test(format))
+        //            format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+        //    }
+        //    return format;
+        //}
+        //function DateTimeFormatter(value) {
+        //    if (value == undefined) {
+        //        return "";
+        //    }
+        //    //将json转换为js时间格式
+        //    value = value.substr(1, value.length - 2);
+        //    var obj = eval('(' + "{Date: new " + value + "}" + ')');
+        //    var dateVlaue = obj["Date"];
+        //    if (dateVlaue.getFullYear() < 1900) {
+        //        return "";
+        //    }
+        //    return dateVlaue.format("yyyy-MM-dd");
+        //}
+        $(function () {
+            Date.prototype.format = function (format) {
+                var o = {
+                    "M+": this.getMonth() + 1,//月份
+                    "d+": this.getDate(),//日期
+                    "h+": this.getHours(),//小时
+                    "m+": this.getMinutes()//分钟
+                }
+                if (/(y+)/.test(format)) {
+                    format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                }
+                for (var k in o) {
+                    if (new RegExp("(" + k + ")").test(format))
+                        format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+                }
+                return format;
+            }
+            function DateTimeFormatter(value) {
+                if (value == undefined) {
+                    return "";
+                }
+                //将json转换为js时间格式
+                value = value.substr(1, value.length - 2);
+                var obj = eval('(' + "{Date: new " + value + "}" + ')');
+                var dateVlaue = obj["Date"];
+                if (dateVlaue.getFullYear() < 1900) {
+                    return "";
+                }
+                return dateVlaue.format("yyyy-MM-dd");
+            }
+
+            $('#dg').datagrid({
+                url: '/Equipment/QueryInfo',
+                fitColumns: true,
+                columns: [[
+                     { field: 'ck', checkbox: true },
+                    { field: 'EName', title: '设备名称', width: 100, align: 'center' },
+                    { field: 'TypeName', title: '设备类型', width: 100, align: 'center' },
+                    {
+                        field: 'EState', title: '设备状态', width: 100, align: 'center',
+                        formatter: function (value, row, index) {
+                            if (value == 3) {
+                                return "报废";
+                            } else if (value == 2) {
+                                return "维修";
+                            }
+                            else {
+                                return "空闲";
+                            }
+                        }
+                    },
+                    { field: 'EBrand', title: '设备品牌', width: 100, align: 'center' },
+                    { field: 'EMFD', title: '购买时间', width: 100, formatter: DateTimeFormatter, align: 'center' },
+                  { field: 'EModel', title: '设备型号', width: 100, align: 'center' },
+                   { field: 'ENum', title: '序列号', width: 100, align: 'center' },
+                ]],
+                toolbar: [{
+                    text: '添加设备',
+                    iconCls: 'icon-add',
+                    handler: function () {
+                        $("#btnOK").css('display', 'none');
+                        $("#btnCel").css('display', 'none');
+                        $('#dlg').dialog('open').dialog({
+                            title: 'My Dialog',
+                            closed: false,
+                            cache: false,
+                            modal: true,
+                            buttons: [{
+                                text: '保存',
+                                handler: function () {
+                                    $.ajax({
+                                        url: "/Equipment/AddE?Brand=" + $("#EBrand").val(),
+                                        data: $("#ff").serialize(),
+                                        success: function (data) {
+                                            if (data == "Y") {
+                                                alert("添加成功");
+                                                $("#dlg").dialog('close');
+                                                $("#dg").datagrid('reload');
+                                                $("#ff").form('clear');
+                                            }
+                                        }
+                                    });
+                                }
+                            }, {
+                                text: '关闭',
+                                handler: function () {
+                                    $("#dlg").dialog('close');
+                                    $("#ff").form('clear');
+                                }
+                            }]
+                        });
+                        URL = "/Equipment/AddE";
+                    }
+                }, '-', {
+                    text: '更新设备',
+                    iconCls: 'icon-edit',
+                    handler: function () {
+                        var row = $("#dg").datagrid('getSelected');
+                        if (row) {
+                            $("#ff").form('load', row);
+                            $("#EDType").combobox('setText', row.TypeName);
+                            $("#btnOK").css('display', 'none');
+                            $("#btnCel").css('display', 'none');
+                            $("#dlg").dialog('open').dialog({
+                                title: 'My Dialog',
+                                closed: false,
+                                cache: false,
+                                modal: true,
+                                buttons: [{
+                                    text: '保存',
+                                    handler: function () {
+                                        $.ajax({
+                                            url: "/Equipment/UpdateE?id=" + row.EID,
+                                            data: $("#ff").serialize(),
+                                            success: function (data) {
+                                                if (data == "Y") {
+                                                    alert("修改成功");
+                                                    $("#dlg").dialog('close');
+                                                    $("#dg").datagrid('reload');
+                                                    $("#ff").form('clear');
+                                                }
+                                            }
+                                        });
+                                    }
+                                }, {
+                                    text: '关闭',
+                                    handler: function () {
+                                        $("#dlg").dialog('close');
+                                        $("#ff").form('clear');
+                                    }
+                                }]
+                            });
+
+                            URL = "/Equipment/UpdateE/?id=" + row.EID;
+
+                        } else {
+                            $.messager.defaults = { ok: "确定", cancel: "取消" };
+                            $.messager.alert('提示', '请选择编辑的数据行')
+                        }
+                    }
+                }]
+
+            });
+            $("#btnOK").click(function () {
+                $("#ff").form('submit', {
+                    url: URL,
+                    onSubmit: function () {
+                        return $(this).form('validate');
+                    },
+                    success: function (result) {
+                        //var result = eval('(' + result + ')');
+                        if (result == "success") {
+                            $("#dlg").dialog('close');
+                            $.messager.defaults = { ok: "确定", cancel: "取消" };
+                            $.messager.alert('提示', '编辑成功！');
+                            $("#dg").datagrid('reload');
+                        } else {
+                            $.messager.show({
+                                title: Error,
+                                msg: result.msg
+                            });
+                        }
+                    }
+                });
+            });
+            $('#EMFD').datebox({
+                width: 90,
+                required: true
+            });
+            //结束时间
+            $('#EBD').datebox({
+                width: 90,
+                required: true
+            });
+            //设备类型下拉框
+            $('#EType1').combobox({
+                width: 90,
+                url: '/Equipment/ComTypeList',
+                valueField: 'TypeID',
+                textField: 'TypeName',
+                value: '常用类'
+            });
+            $('#EDType').combobox({
+                width: 90,
+                url: '/Equipment/ComTypeList',
+                valueField: 'TypeID',
+                textField: 'TypeName',
+            });
+            //查询事件
+            //$("#btnSearch").click(function () {
+            //    $('#dg').datagrid('load', {
+            //        EName: $('#EName').val(),
+            //        ETName: $('#EType').combobox('getText'),
+            //    });
+            //});
+            $("#btnSearch").click(function () {
+                var EType1 = $("#EType1").combobox('getText');
+                var time = $("#EMFD").datebox('getValue');
+                
+                $("#dg").datagrid('load', {
+                    'EName': $("#EName").val(),
+                    'EType1': EType1,
+                    'EMFD': time
+                });
+            });
+            $("#btn1").click(function () {
+                $("#imgc").attr
+                $("#frm").form('submit', {
+                    url: "/Equipment/EquipmentIndex"
+                });
+
+            });
+
+            $("#file").change(function () {
+                var fi = $("#file").val().substring(32,12)
+                var sr = "/images/" + fi;
+                $("#imgc").attr("src", sr)
+                $("#f").val(fi);
+
+               
+            })
+        });
+    </script>
+</head>
+<body>
+    <div id="InfoWhere">
+        设备名称：@Html.TextBox("EName")
+        设备类型：@Html.TextBox("EType1")
+        开始时间：@Html.TextBox("EMFD")
+
+        <input type="button" value="查询" id="btnSearch" />
+        @Html.ActionLink("返回首页", "Index")
+    </div>
+    <table id="dg">
+    </table>
+
+    <div id="dlg" class="easyui-dialog" closed="true" resizable="true" modal="true" button="#btn" align="center" style="width: 700px; height: 500px; padding: 10px 20px;">
+        <form id="ff" method="post" novalidate="novalidate">
+            <table id="tblAdd1">
+                <tr>
+                    <td class="title">设备名称：</td>
+                    <td>
+                        <input id="EName" type="text" name="EName" class="easyui-validatebox" data-options="required:true" />
+                    </td>
+                    <td><input type="text" id="f" name="f" style="display:none"/></td>
+                </tr>
+                <tr>
+                    <td class="title">设备型号：</td>
+                    <td>
+                        <input id="EModel" type="text" name="EModel" class="easyui-validatebox" data-options="required:true" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title">设备序列号：</td>
+                    <td>
+                        <input id="ENum" type="text" name="ENum" class="easyui-validatebox" data-options="required:true" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title">出厂时间：</td>
+                    <td>
+                        <input id="EMFD" name="EMFD" type="text" class="easyui-datebox" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title">上传图片：</td>
+                    <td>
+                        
+                    </td>
+                </tr>
+
+            </table>
+            <table id="tblAdd2">
+                <tr>
+                    <td class="title">设备类型：</td>
+                    <td>
+                        <input id="EDType" type="text" name="EType" class="easyui-combobox" />
+                    </td>
+
+                </tr>
+                <tr>
+                    <td class="title">设备牌名：</td>
+                    <td>
+                        <input id="EBrand" type="text" name="EBrand" class="easyui-validatebox" data-options="required:true" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title">生产厂家：</td>
+                    <td>
+                        <input id="EFactory" type="text" name="EFactory" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title">购买时间：</td>
+                    <td>
+                        <input id="EBD" name="EBD" type="text" class="easyui-datebox" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <img src="~/images/cloud.png" />
+        @using (Html.BeginForm("Index", "Equipment", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            <input name="file" type="file" id="file" />
+                            <input type="submit" name="submit" value="上传" /><br />
+                            <img src="/" width="200" height="160" id="imgc" />
+                        }
+        <p>备注：@Html.TextArea("area", "", 5, 30, null)</p>
+        <div id="btn">
+            <a href="javascript:void(0)" class="easyui-linkbutton" id="btnOK" iconcls="icon-ok">确定</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" id="btnCel" onclick="javascript:$('#dlg').dialog('close')">关闭</a>
+        </div>
+    </div>
+
+
+</body>
+</html>

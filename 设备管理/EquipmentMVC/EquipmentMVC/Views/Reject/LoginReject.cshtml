@@ -1,0 +1,155 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html> 
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>LoginReject</title>
+    <link href="~/jquery-easyui-1.3.6/themes/icon.css" rel="stylesheet" />
+    <link href="~/jquery-easyui-1.3.6/themes/default/easyui.css" rel="stylesheet" />
+
+    <script src="~/jquery-easyui-1.3.6/jquery.min.js"></script>
+    <script src="~/jquery-easyui-1.3.6/jquery.easyui.min.js"></script>  
+    <style>
+        body {
+            font-family: Microsoft YaHei,Verdana,Arial,SimSun;
+            color: #666;
+            font-size: 14px;
+            background: #f6f6f6;
+            overflow: hidden;
+            margin-left: 20px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            $('#EType').combobox({
+                url: '/Reject/selType',
+                valueField: 'ETypeID',
+                textField: 'EType1',
+                panelHeight: 'auto',
+                onLoadSuccess: function (data) {
+                    $('#EType').combobox('setValue', data[0].ETypeID)
+                },
+                onSelect: function () {
+
+                    var pic = $("#EID").combobox('getValue');
+                    $.ajax({
+                        url: "/Reject/DeviceImg",
+                        type: "GET",
+                        data: { "DID": pic },
+                        contentType: "application/x-www-form-urlencoded",
+                        success: function (data) {
+                            console.info(data);
+                            if (data != null) {
+                                $("#pic").attr("src", "/images/" + data);
+                            }
+                        }
+                    });
+                    var id = $("#EType").combobox('getValues');
+                    $("#EID").combobox({
+                        url: '/Reject/DropNameID?id=' + id,
+                        valueField: 'EID',
+                        textField: 'EName',
+                        panelHeight: 'auto',
+                    });
+                }
+            });
+            $('#EID').combobox({
+                url: '/Reject/selName',
+                valueField: 'EID',
+                textField: 'EName',
+                panelHeight: 'auto',
+                onLoadSuccess: function (data) {
+                    $('#EID').combobox('setValue', data[0].EID)
+                },
+                onSelect: function () {
+                    var pic = $("#EID").combobox('getValue');
+                    $.ajax({
+                        url: "/Reject/DeviceImg",
+                        type: "GET",
+                        data: { "DID": pic },
+                        contentType: "application/x-www-form-urlencoded",
+                        success: function (data) {
+                            console.info(data);
+                            if (data != null) {
+                                $("#pic").attr("src", "/images/" + data);
+                            }
+                        }
+                    });
+                    var Name = $("#EID").combobox('getText');
+                    $("#EType").combobox({
+                        url: '/Reject/DorpType?Name=' + Name,
+                        valueField: 'ETypeID',
+                        textField: 'EType1',
+                        panelHeight: 'auto'
+                    });
+                }
+            });
+
+            $('#btnReject').click(function () {
+                $('#ff').form('submit', {
+                    url: '/Reject/add',
+                    onSubmit: function () {
+                        return $(this).form('validate');
+                    },
+                    success: function (result) {
+                        var result = eval('(' + result + ')');
+                        if (result.success) {
+                            $.messager.alert('提示', '成功！');
+                        }
+                        else {
+                            $.message.show({
+                                title: Error,
+                                msg: result.msg
+                            })
+                        }
+                    }
+                });
+
+            });
+        });
+    </script>
+</head>
+<body>
+    <div style="text-align: center;">
+        <h2>报废设备登记</h2>
+        <form id="ff" method="post" style="text-align:left;margin-left:450px;">
+            <div>
+               <span> <label for="name">选择设备:</label>
+                <input id="EID" name="EID">
+                   </span>
+                <span>
+                   <img src="~/images/pingguo.jpg" width="100px" height="100px" style="border: 1px solid black; float: right; margin-right: 200px;" id="pic" />
+ @*                   <img src="~/images/@ViewBag.EPic" width="100px" height="100px" style="border: 1px solid black; float: right; margin-right: 200px;" id="pic" />*@
+                </span>
+            </div>
+            <br />
+            <div>
+                <label for="email">设备类型:</label>
+                <input id="EType" name="EType">
+            </div>
+            <br />
+            <div>
+                    <label for="email">折旧金额:</label>
+                    <input name="RCost" type="text" class="easyui-numberbox" value="100" data-options="min:0,precision:2" /></input>
+               </div>
+            <br />
+            <div>
+                    <label for="email">报废日期:</label>
+                    <input id="RDate" name="RDate" type="text" class="easyui-datebox" required="required" /></input> </span>
+            </div>
+            <br />
+            <div>
+                <label for="email">报废原因:</label>
+                <textarea id="RCause" name="RCause"
+                     cols="20" rows="4"></textarea>
+            </div>
+            <br />
+            <input id="btnReject" type="button" value="报废" /><span>@Html.ActionLink("返回", "index")</span> 
+        </form>
+    </div>
+</body>
+</html>

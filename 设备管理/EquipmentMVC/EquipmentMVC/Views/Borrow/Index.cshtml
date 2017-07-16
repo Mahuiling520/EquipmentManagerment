@@ -1,0 +1,146 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/jquery-easyui-1.3.6/themes/default/easyui.css" rel="stylesheet" />
+    <link href="~/jquery-easyui-1.3.6/themes/icon.css" rel="stylesheet" />
+    <script src="~/jquery-easyui-1.3.6/jquery.min.js"></script>
+    <script src="~/jquery-easyui-1.3.6/jquery.easyui.min.js"></script>
+    <script src="~/jquery-easyui-1.3.6/locale/easyui-lang-zh_CN.js"></script>
+    <style>
+        body {
+            font-family: Microsoft YaHei,Verdana,Arial,SimSun;
+            color: #666;
+            font-size: 14px;
+            background: #f6f6f6;
+            overflow: hidden;
+            margin-left: 20px;
+        }
+
+        p {
+            margin-left: 200px;
+            margin-bottom: 20px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            $("#EID").combobox({
+                url: '/Borrow/DropName',
+                valueField: 'EID',
+                textField: 'EName',
+                panelHeight: 'auto',
+                editable: false,
+                onLoadSuccess: function (data) {
+                    $('#EID').combobox('setValue', data[0].EID)
+                },
+                onSelect: function () {
+                    var pic = $("#EID").combobox('getValue');
+                    $.ajax({
+                        url: "/Borrow/DeviceImg",
+                        type: "GET",
+                        data: { "DID": pic },
+                        contentType: "application/x-www-form-urlencoded",
+                        success: function (data) {
+                            console.info(data);
+                            if (data != null) {
+                                $("#pic").attr("src", "/images/" + data);
+                            }
+                        }
+                    });
+                    var Name = $("#EID").combobox('getText');
+                    $("#EType").combobox({
+                        url: '/Borrow/DorpType?Name=' + Name,
+                        valueField: 'ETypeID',
+                        textField: 'EType1',
+                        panelHeight: 'auto'
+                    });
+                }
+            });
+            $('#EType').combobox({
+                url: '/Borrow/DropList',
+                valueField: 'ETypeID',
+                textField: 'EType1',
+                panelHeight: 'auto',
+                editable: false,
+                onLoadSuccess: function (data) {
+                    $('#EType').combobox('setValue', data[0].ETypeID)
+                },
+                onSelect: function () {
+                    var pic = $("#EID").combobox('getValue');
+                    $.ajax({
+                        url: "/Borrow/DeviceImg",
+                        type: "GET",
+                        data: { "DID": pic },
+                        contentType: "application/x-www-form-urlencoded",
+                        success: function (data) {
+                            console.info(data);
+                            if (data != null) {
+                                $("#pic").attr("src", "/images/" + data);
+                            }
+                        }
+                    });
+                    var id = $("#EType").combobox('getValues');
+                    $("#EID").combobox({
+                        url: '/Borrow/DropNameID?id=' + id,
+                        valueField: 'EID',
+                        textField: 'EName',
+                        panelHeight: 'auto',
+                    });
+                }
+            });
+            $('#BBrandID').combobox({
+                url: '/Borrow/DropBrand',
+                valueField: 'BrandID',
+                textField: 'BrandName',
+                panelHeight: 'auto',
+                editable: false,
+                onLoadSuccess: function (data) {
+                    $('#BBrandID').combobox('setValue', data[0].BrandID)
+                }
+            });
+            $("#sbm").click(function () {
+                $('#frm').form('submit', {
+                    url: '/Borrow/ADDEmq',
+                    onSubmit: function () {
+                        return $(this).form('validate');
+                    },
+                    success: function (data) {
+                    }
+
+                })
+            });
+            $("#BDate").datebox({
+                editable: false
+            })
+        });
+    </script>
+</head>
+<body>
+    <div id="main">
+        <h1 style="text-align: center">设备借出登记</h1>
+        <div style="width: 800px; margin: 0 auto; height: 400px;">
+            <form id="frm" method="post">
+                @*@using (Html.BeginForm())
+                {
+                    *@<p style="margin-top: 50px;">设备名称: @Html.TextBox("EID")</p>
+                    <img src="" width="100px" height="100px" style="border: 1px solid black; float: right; margin-right: 200px;" id="pic" />
+                    <p>设备类型: @Html.TextBox("EType")</p>
+                    <p>借&nbsp; 用&nbsp; 人: @Html.TextBox("BPMan")</p>
+                    <p>借用部门: @Html.TextBox("BBrandID")</p>
+                    <p>借用日期: @Html.TextBox("BDate")</p>
+                    <p>借用天数: @Html.TextBox("BHour")天</p>
+                    <p>
+                        <input type="button" value="提 交" id="sbm" /><input type="button" value="重 置" style="margin-left: 200px" />
+                    </p>
+                @*}*@
+            </form>
+        </div>
+    </div>
+</body>
+</html>

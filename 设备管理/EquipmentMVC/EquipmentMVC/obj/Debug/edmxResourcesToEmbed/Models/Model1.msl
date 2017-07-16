@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="EquipmentDBModelStoreContainer" CdmEntityContainer="EquipmentDBEntities">
+    <EntitySetMapping Name="BorrowAndReturn">
+      <EntityTypeMapping TypeName="EquipmentDBModel.BorrowAndReturn">
+        <MappingFragment StoreEntitySet="BorrowAndReturn">
+          <ScalarProperty Name="BID" ColumnName="BID" />
+          <ScalarProperty Name="EID" ColumnName="EID" />
+          <ScalarProperty Name="BPMan" ColumnName="BPMan" />
+          <ScalarProperty Name="BBrandID" ColumnName="BBrandID" />
+          <ScalarProperty Name="BHour" ColumnName="BHour" />
+          <ScalarProperty Name="BDate" ColumnName="BDate" />
+          <ScalarProperty Name="RDate" ColumnName="RDate" />
+          <ScalarProperty Name="EStateID" ColumnName="EStateID" />
+          <ScalarProperty Name="EType" ColumnName="EType" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Brand">
+      <EntityTypeMapping TypeName="EquipmentDBModel.Brand">
+        <MappingFragment StoreEntitySet="Brand">
+          <ScalarProperty Name="BID" ColumnName="BID" />
+          <ScalarProperty Name="BrandName" ColumnName="BrandName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Equipment">
+      <EntityTypeMapping TypeName="EquipmentDBModel.Equipment">
+        <MappingFragment StoreEntitySet="Equipment">
+          <ScalarProperty Name="EID" ColumnName="EID" />
+          <ScalarProperty Name="EName" ColumnName="EName" />
+          <ScalarProperty Name="ETypeID" ColumnName="ETypeID" />
+          <ScalarProperty Name="EModel" ColumnName="EModel" />
+          <ScalarProperty Name="EBrand" ColumnName="EBrand" />
+          <ScalarProperty Name="ENum" ColumnName="ENum" />
+          <ScalarProperty Name="EFactory" ColumnName="EFactory" />
+          <ScalarProperty Name="EMFD" ColumnName="EMFD" />
+          <ScalarProperty Name="EBD" ColumnName="EBD" />
+          <ScalarProperty Name="EPic" ColumnName="EPic" />
+          <ScalarProperty Name="EDesc" ColumnName="EDesc" />
+          <ScalarProperty Name="EState" ColumnName="EState" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EType">
+      <EntityTypeMapping TypeName="EquipmentDBModel.EType">
+        <MappingFragment StoreEntitySet="EType">
+          <ScalarProperty Name="ETypeID" ColumnName="ETypeID" />
+          <ScalarProperty Name="EType1" ColumnName="EType" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Reject">
+      <EntityTypeMapping TypeName="EquipmentDBModel.Reject">
+        <MappingFragment StoreEntitySet="Reject">
+          <ScalarProperty Name="RID" ColumnName="RID" />
+          <ScalarProperty Name="EID" ColumnName="EID" />
+          <ScalarProperty Name="RCost" ColumnName="RCost" />
+          <ScalarProperty Name="RDate" ColumnName="RDate" />
+          <ScalarProperty Name="RCause" ColumnName="RCause" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Service">
+      <EntityTypeMapping TypeName="EquipmentDBModel.Service">
+        <MappingFragment StoreEntitySet="Service">
+          <ScalarProperty Name="SID" ColumnName="SID" />
+          <ScalarProperty Name="EID" ColumnName="EID" />
+          <ScalarProperty Name="SPMan" ColumnName="SPMan" />
+          <ScalarProperty Name="SAddress" ColumnName="SAddress" />
+          <ScalarProperty Name="SCause" ColumnName="SCause" />
+          <ScalarProperty Name="SCauseDate" ColumnName="SCauseDate" />
+          <ScalarProperty Name="SDesc" ColumnName="SDesc" />
+          <ScalarProperty Name="SCost" ColumnName="SCost" />
+          <ScalarProperty Name="SHour" ColumnName="SHour" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="State">
+      <EntityTypeMapping TypeName="EquipmentDBModel.State">
+        <MappingFragment StoreEntitySet="State">
+          <ScalarProperty Name="SID" ColumnName="SID" />
+          <ScalarProperty Name="SName" ColumnName="SName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="EquipmentDBModel.Users">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="UID" ColumnName="UID" />
+          <ScalarProperty Name="UName" ColumnName="UName" />
+          <ScalarProperty Name="UPwd" ColumnName="UPwd" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

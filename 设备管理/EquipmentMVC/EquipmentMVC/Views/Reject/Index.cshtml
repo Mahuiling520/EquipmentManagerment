@@ -1,0 +1,109 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="~/jquery-easyui-1.3.6/jquery.min.js"></script>
+    <script src="~/jquery-easyui-1.3.6/jquery.easyui.min.js"></script>
+    <link href="~/jquery-easyui-1.3.6/themes/icon.css" rel="stylesheet" />
+    <link href="~/jquery-easyui-1.3.6/themes/default/easyui.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Microsoft YaHei,Verdana,Arial,SimSun;
+            color: #666;
+            font-size: 14px;
+            background: #f6f6f6;
+            overflow: hidden;
+            margin-left:20px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            Date.prototype.format = function (format) {
+                var o = {
+                    "M+": this.getMonth() + 1,//月份
+                    "d+": this.getDate(),//日期
+                    "h+": this.getHours(),//小时
+                    "m+": this.getMinutes()//分钟
+                }
+                if (/(y+)/.test(format)) {
+                    format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                }
+                for (var k in o) {
+                    if (new RegExp("(" + k + ")").test(format))
+                        format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+                }
+                return format;
+            }
+            function DateTimeFormatter(value) {
+                if (value == undefined) {
+                    return "";
+                }
+                //将json转换为js时间格式
+                value = value.substr(1, value.length - 2);
+                var obj = eval('(' + "{Date: new " + value + "}" + ')');
+                var dateVlaue = obj["Date"];
+                if (dateVlaue.getFullYear() < 1900) {
+                    return "";
+                }
+                return dateVlaue.format("yyyy-MM-dd");
+            }
+            $('#tb').datagrid({
+                url: '/Reject/GetList',
+                method: 'post',
+                fitColumns: true,
+                singleSelect: true,
+                rownumbers: true,
+                columns: [[
+                     { field: 'ck',checkbox:true},
+                    { field: 'EName', title: '设备名称', width: 100, align: 'center' },
+                { field: 'EType', title: '设备类型', width: 100, align: 'center' },
+                { field: 'RDate', title: '报废日期', width: 100, align: 'center' },
+                { field: 'RCause', title: '报废原因', width: 100, align: 'center' },
+                { field: 'RCost', title: '折旧金额', width: 100, align: 'center' }
+                ]]
+            });
+            $("#RDate").datebox({
+                required: true
+            });
+            $('#EType1').combobox({
+                url: '/Reject/selType',
+                valueField: 'ETypeID',
+                textField: 'EType1',
+                panelHeight: 'auto',
+                onLoadSuccess: function (data) {
+                    $('#EType1').combobox('setValue', data[0].ETypeID)
+                }
+            });
+            $('#btnsearch').click(function () {
+                $('#tb').datagrid('load', {
+                    EName: $('#EName').val(),
+                    EType1: $('#EType1').combobox('getText'),
+                    RDate: $('#RDate').datebox('getValue'),
+                });
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div style="text-align:center"> 
+        <h2 style="text-align:center">查询设备报废信息</h2>
+        <p>
+        设备名称：<input class="easyui-textbox" id="EName" name="EName" />
+        设备类别：
+        <input id="EType1" name="EType1" />
+        开始时间：<input class="easyui-datebox" id="RDate" name="RDate" />
+        <input type="button" value="查询" id="btnsearch" />
+        @Html.ActionLink("返回首页", "Index")
+    </p>
+        <br />
+        <table id="tb" style="text-align:center;"></table>
+    </div>
+</body>
+</html>

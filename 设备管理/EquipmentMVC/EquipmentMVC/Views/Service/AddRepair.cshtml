@@ -1,0 +1,139 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddRepair</title>    
+    <link href="~/jquery-easyui-1.3.6/themes/icon.css" rel="stylesheet" />
+    <link href="~/jquery-easyui-1.3.6/themes/default/easyui.css" rel="stylesheet" />
+    <script src="~/jquery-easyui-1.3.6/jquery.min.js"></script>
+    <script src="~/jquery-easyui-1.3.6/jquery.easyui.min.js"></script>
+    <script src="~/jquery-easyui-1.3.6/locale/easyui-lang-zh_CN.js"></script>
+    <style>
+        body {
+            font-family: Microsoft YaHei,Verdana,Arial,SimSun;
+            color: #666;
+            font-size: 14px;
+            background: #f6f6f6;
+            overflow: hidden;
+            margin-left: 20px;
+        }
+
+        td {
+            height: 50px;
+        }
+
+        .zi {
+            padding-left: 50px;
+        }
+    </style>
+    <script type="text/javascript">
+        //数据绑定
+        $(function () {
+            $('#EID').combobox({
+                url: '/Service/selType',
+                method: 'post',
+                valueField: 'ETypeID',
+                textField: 'EType1',
+                onSelect: function () {
+                    var ETypeID = $('#EID').combobox('getValue');
+                    $('#EType').combobox({
+                        url: '/Service/selName?ETypeID=' + ETypeID,
+                        method: 'post',
+                        valueField: 'EID',
+                        textField: 'EName',
+                        onSelect: function () {
+                            var Eid = $("#EType").combobox('getValue');
+                            //显示与下拉框的联动
+                            jQuery.ajax({
+                                url: '/Service/TypeImage',
+                                type: 'Get',
+                                data: { "Eid": Eid },
+                                contentType: "application/x-www-form-urlencoded",
+                                success: function (data) {
+                                    if (data != null) {
+                                        $('#Img').attr("src", "/images/" + data);
+                                    }
+                                    else {
+                                        $('#Img').attr("~/images/biji1.jpg");
+                                    }
+
+                                }
+                            });
+
+                        }
+
+                    });
+                }
+            });
+            //添加
+            $("#addOK").click(function () {
+                $("#ff").form('submit', {
+                    url: "/Service/add",
+                    onSubmit: function () {
+                        return $(this).form('validate');
+                    },
+                    success: function (result) {
+                        if (result == "Y") {
+                            $.messager.alert('提示', '添加成功');
+                            $("#ff").form('clear');
+                            $("#tb").datagrid('reload');
+                        } else {
+                            $.message.show({ title: Error, msg: result.msg });
+                        }
+                    }
+                });
+
+            });
+        });
+    </script>
+</head>
+<body>
+    <div style="text-align: center;">
+        <h2>添加设备维修记录</h2>
+        <form id="ff" method="post" style="margin-left: 300px;">
+            <table>
+                <tr>
+                    <td>设备类型：</td>
+                    <td>
+                        <input class="easyui-combobox" id="EID" name="EID" data-options="required:true" editable="false"></td>
+                    <td class="zi">选择设备：</td>
+                    <td>
+                        <input class="easyui-combobox" id="EType" name="EType" data-options="required:true" editable="false"></td>
+                    <td class="zi">
+                        <img id="Img" alt="" src="~/images/biji1.jpg" style="width: 80px; height: 80px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>维修人员:</td>
+                    <td>
+                        <input class="easyui-validatebox" id="SPMan" name="SPMan" data-options="required:true" /></td>
+                    <td class="zi">维修地点：</td>
+                    <td>
+                        <input class="easyui-validatebox" id="SAddress" name="SAddress" data-options="required:true" /></td>
+                </tr>
+                <tr>
+                    <td>故障原因：</td>
+                    <td>
+                        <input class="easyui-validatebox" id="SCause" name="SCause" data-options="required:true" /></td>
+                    <td class="zi">维修日期：</td>
+                    <td>
+                        <input class="easyui-datebox" id="SCauseDate" name="SCauseDate" data-options="required:true" /></td>
+                </tr>
+                <tr>
+                    <td>备注：</td>
+                    <td colspan="3">
+                        <textarea style="width: 475px; height: 100px" id="SDesc" name="SDesc" data-options="required:true"></textarea>
+                </tr>
+            </table>
+            <p style="margin-left: 60px;">
+                <input id="addOK" type="button" value="提交" style="width: 50px;" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="~/Service/Index"><input id="back" type="button" value="返回" style="width: 50px;" /></a>
+            </p>
+        </form>
+    </div>
+</body>
+</html>

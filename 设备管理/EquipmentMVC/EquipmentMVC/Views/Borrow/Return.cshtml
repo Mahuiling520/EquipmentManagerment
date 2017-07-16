@@ -1,0 +1,88 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/jquery-easyui-1.3.6/themes/default/easyui.css" rel="stylesheet" />
+    <link href="~/jquery-easyui-1.3.6/themes/icon.css" rel="stylesheet" />
+    <script src="~/jquery-easyui-1.3.6/jquery.min.js"></script>
+    <script src="~/jquery-easyui-1.3.6/jquery.easyui.min.js"></script>
+    <script src="~/jquery-easyui-1.3.6/locale/easyui-lang-zh_CN.js"></script>
+    <style>
+        body {
+            font-family: Microsoft YaHei,Verdana,Arial,SimSun;
+            color: #666;
+            font-size: 14px;
+            background: #f6f6f6;
+            overflow: hidden;
+            margin-left: 20px;
+        }
+
+        p {
+            margin-left: 200px;
+            margin-bottom: 20px;
+        }
+        #BID {
+            display:none;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            $("#sbm").click(function () {
+                var id = $("#BID").val();
+                var rd = $("#RDate").val();
+                var time = $("#BDate").val();
+                var time2 = $("#RDate").datebox('getValue');
+                //alert(time+","+time2)
+                //if (time < time2) {
+                $('#frm').form('submit', {
+                    url: '/Borrow/UpEmp?BID' + id,
+                    onSubmit: function () {
+                        return $(this).form('validate');
+                    },
+                    success: function (data) {
+                    }
+                });
+                //} else {
+                //    alert("归还时间要大于借出时间")
+                //}
+            });
+            $("input[name!='RDate']").attr('readonly', 'readonly');
+            $("#RDate").removeClass('readonly').datebox({
+                editable: false
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="main">
+        <h1 style="text-align: center">设备归还登记</h1>
+        <div style="width: 800px; margin: 0 auto; height: 400px;">
+            <form id="frm" method="post">
+                @*@using (Html.BeginForm())
+                {
+                    *@
+                <p>@Html.TextBox("BID")</p>
+                <p style="margin-top: 50px;">设备名称: @Html.TextBox("EID")</p>
+                <img src="~/images/@ViewBag.EPic" width="100px" height="100px" style="border: 1px solid black; float: right; margin-right: 200px;" id="pic" />
+                <p>设备类型: @Html.TextBox("EType")</p>
+                <p>借&nbsp; 用&nbsp; 人: @Html.TextBox("BPMan")</p>
+                <p>借用部门: @Html.TextBox("BBrandID")</p>
+                <p>借用日期: @Html.TextBox("BDate")</p>
+                <p>借用天数: @Html.TextBox("BHour")天</p>
+                <p>归还日期: @Html.TextBox("RDate")</p>
+                <p>
+                    <input type="submit" value="提 交" id="sbm" /><input type="button" value="重 置" style="margin-left: 200px" />
+                </p>
+                @*}*@
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
